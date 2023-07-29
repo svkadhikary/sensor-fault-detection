@@ -7,6 +7,10 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+venv/
+catboost_info/
+.vscode/
+plots/
 .Python
 build/
 develop-eggs/
