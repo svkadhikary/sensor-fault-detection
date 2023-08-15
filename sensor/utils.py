@@ -1,8 +1,10 @@
 import os
 import sys
 import pandas as pd
+import numpy as np
 import json
 import yaml
+import dill
 from .exception import SensorException
 from .logger import logging
 from .config import mongo_client
@@ -48,3 +50,22 @@ def read_yaml_file(file_path):
     except Exception as e:
         raise SensorException(e, sys)
 
+def save_object(file_path:str, obj:object):
+    try:
+        logging.info(f"Saving object")
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+            dill.dump(obj, file_obj)
+        logging.info(f"File object saved at {file_path}")
+    except Exception as e:
+        raise SensorException(e, sys)
+    
+def save_numpy_array_data(file_path:str, data:np.array):
+    try:
+        logging.info(f"Saving numpy array")
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+            np.save(file_obj, data)
+        logging.info(f"Numpy array saved at {file_path}")
+    except Exception as e:
+        raise SensorException(e, sys)

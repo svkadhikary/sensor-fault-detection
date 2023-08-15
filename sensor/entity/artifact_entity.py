@@ -17,4 +17,9 @@ class DataValidationArtifact:
     test_file_path:str
     status:bool
 
-
+@dataclass
+class DataTransformationArtifact:
+    transformer_object_path:str 
+    transformed_train_path:str 
+    transformed_test_path:str 
+    target_encoder_path:str

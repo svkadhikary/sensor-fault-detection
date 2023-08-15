@@ -6,4 +6,6 @@ matplotlib
 pymongo
 python-dotenv
 PyYAML
+imbalanced-learn
+dill
 -e .
