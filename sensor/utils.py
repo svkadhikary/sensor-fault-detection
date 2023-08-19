@@ -69,3 +69,12 @@ def save_numpy_array_data(file_path:str, data:np.array):
         logging.info(f"Numpy array saved at {file_path}")
     except Exception as e:
         raise SensorException(e, sys)
+    
+def load_numpy_array(file_path:str):
+    try:
+        logging.info(f"Loading numpy array: {file_path}")
+        with open(file_path, "rb") as file_obj:
+            data = np.load(file_obj)
+        return data
+    except Exception as e:
+        raise SensorException(e, sys)
