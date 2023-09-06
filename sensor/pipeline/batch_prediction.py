@@ -1,7 +1,7 @@
 from sensor.entity.config_entity import BatchPredictionConfig
 from sensor.exception import SensorException
 from sensor.logger import logging
-import os,sys 
+import os, sys 
 from sensor.utils import load_object
 from sensor.ml.model_resolver import ModelResolver
 import pandas as pd
@@ -59,7 +59,7 @@ class SensorBatchPrediction:
                 logging.info(f"Saving prediction  file : {prediction_file_path}")
                 df.to_csv(prediction_file_path, index=False, header=True)
 
-                archive_file_path = os.path.join(self.batch_config.archive_dir,file_name)
+                archive_file_path = os.path.join(self.batch_config.archive_dir, file_name)
 
                 shutil.copyfile(src=file_path, dst=archive_file_path)
                 logging.info(f"Copying input file into archive: {archive_file_path}")

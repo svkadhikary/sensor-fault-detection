@@ -5,9 +5,8 @@ from sensor.exception import SensorException
 from sensor.logger import logging
 
 
-def storing_data_in_mongo():
+def storing_data_in_mongo(file_path:str="E:/sensor_fault_detection/aps_failure_training_set1.csv"):
     try:
-        file_path = "E:/sensor_fault_detection/aps_failure_training_set1.csv"
         database_name = "sensor"
         collection_name = "sensor_readings"
         logging.info(f"Uploading data to mongodb in database {database_name} collection {collection_name}")

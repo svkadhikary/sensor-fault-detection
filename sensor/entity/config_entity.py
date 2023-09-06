@@ -79,7 +79,7 @@ class ModelEvaluationConfig:
         self.schema_file_path = "schema.yaml"
 
 class ModelPusherConfig:
-    def __init__(self,training_pipeline_config:TrainingPipelineConfig) -> None:
+    def __init__(self, training_pipeline_config:TrainingPipelineConfig) -> None:
         self.model_pusher_dir = os.path.join(training_pipeline_config.artifact_dir , "model_pusher")
         self.saved_model_dir = os.path.join("saved_models")
         self.pusher_model_dir = os.path.join(self.model_pusher_dir,"saved_models")

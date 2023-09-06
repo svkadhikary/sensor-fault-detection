@@ -9,4 +9,5 @@ PyYAML
 imbalanced-learn
 dill
 xgboost
+streamlit
 -e .

@@ -24,7 +24,7 @@ def test_exception_and_logger():
 
 if __name__ == '__main__':
     try:
-        test_exception_and_logger()
+        print("Dockerized")
     except Exception as e:
         logging.info(f"error: {e}")
         print(e)
