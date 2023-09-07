@@ -1,0 +1,44 @@
+# CircleCI configuration file
+
+version: 2.1
+commands:
+  check-python:
+    steps:
+      - run:
+          command: python3 --version
+          name: Check Python version
+      - run:
+          command: pip3 --version
+          name: Check Pip version
+  create-env:
+    steps:
+      - run:
+          # Environment variables must be configured in a CircleCI project or context
+          command: |
+            cat \<<- EOF > .env
+            DOCKER_USERNAME=$DOCKER_USERNAME
+            DOCKER_PASSWORD=$DOCKER_PASSWORD
+            MONGO_DB_URL=$MONGO_DB_URL
+            EOF
+          name: Create .env file containing secrets
+  wait-5:
+    steps:
+      - run:
+          command: sleep 5
+          name: Wait 5 seconds
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t sensor_fault .
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker tag sensor_fault:latest $DOCKER_USERNAME/sensor_fault:latest
+            docker push $DOCKER_USERNAME/sensor_fault:latest
