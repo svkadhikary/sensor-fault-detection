@@ -8,7 +8,8 @@ commands:
           command: python3 --version
           name: Check Python version
       - run:
-          command: pip3 --version
+          command: pip --version
+            pip install --upgrade pip
           name: Check Pip version
   create-env:
     steps:
