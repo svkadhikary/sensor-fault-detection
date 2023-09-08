@@ -1,0 +1,10 @@
+artifact/
+data/
+.circleci/
+catboost_info/
+logs/
+plots/
+saved_models/
+venv/
+.env
+aps_failure_training_set1.csv
