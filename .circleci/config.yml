@@ -24,6 +24,7 @@ jobs:
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   deploy:
     steps:
+      -checkout
       -run:
         name: Deploy to AWS EC2
         command: |
