@@ -31,10 +31,10 @@ class ModelPusher:
             target_encoder = load_object(file_path=self.data_transformation_artifact.target_encoder_path)
 
             #model pusher dir
-            logging.info(f"Saving model into model pusher directory")
-            save_object(file_path=self.model_pusher_config.pusher_transformer_path, obj=transformer)
-            save_object(file_path=self.model_pusher_config.pusher_model_path, obj=model)
-            save_object(file_path=self.model_pusher_config.pusher_target_encoder_path, obj=target_encoder)
+            # logging.info(f"Saving model into model pusher directory")
+            # save_object(file_path=self.model_pusher_config.pusher_transformer_path, obj=transformer)
+            # save_object(file_path=self.model_pusher_config.pusher_model_path, obj=model)
+            # save_object(file_path=self.model_pusher_config.pusher_target_encoder_path, obj=target_encoder)
 
 
             #saved model dir

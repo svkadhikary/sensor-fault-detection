@@ -9,28 +9,55 @@ from .exception import SensorException
 from .logger import logging
 from .config import mongo_client
 
-def dump_csv_to_mongodb(file_path:str, database_name:str, collection_name:str):
-    try:
-        # read data with pandas
-        df = pd.read_csv(file_path)
-        logging.info(f"Rows and columns shape: {df.shape}")
-        # drop index column
-        df.reset_index(drop=True, inplace=True)
-        # convert to json
-        json_records = list(json.loads(df.T.to_json()).values())
-        # dump records in mongodb
-        mongo_client[database_name][collection_name].insert_many(json_records)
 
+def export_collection_as_dataframe(database_name, collection_name)->pd.DataFrame:
+    try:
+        if collection_name in mongo_client[database_name].list_collection_names():
+            df = pd.DataFrame(list(mongo_client[database_name][collection_name].find()))
+            if "_id" in df.columns:
+                df.drop(['_id'], axis=1, inplace=True)
+
+            return df
+        else:
+            return None
     except Exception as e:
         raise SensorException(e, sys)
     
-def export_collection_as_dataframe(database_name, collection_name)->pd.DataFrame:
+def dump_csv_to_mongodb(file_path:str, database_name:str, collection_name:str):
     try:
-        df = pd.DataFrame(list(mongo_client[database_name][collection_name].find()))
-        if "_id" in df.columns:
-            df.drop(['_id'], axis=1, inplace=True)
-
-        return df
+        # load saved data if available
+        prev_df = export_collection_as_dataframe(database_name, collection_name)
+        logging.info("imported existing data")
+        if prev_df is not None:
+            # read new data with pandas
+            df = pd.read_csv(file_path)
+            logging.info(f"Rows and columns shape: {df.shape}")
+            # drop index column
+            df.reset_index(drop=True, inplace=True)
+            # concat both data
+            df = pd.concat([df, prev_df], ignore_index=True)
+            logging.info("Concatenated new data")
+            # drop duplicates
+            df = df.drop_duplicates()
+            df.reset_index(drop=True, inplace=True)
+            logging.info("duplicate datapoints dropped")
+            # convert to json
+            json_records = list(json.loads(df.T.to_json()).values())
+            # delete previous collection if exist
+            mongo_client[database_name][collection_name].drop()
+            logging.info("existing collection dropped")
+            # dump records in mongodb
+            mongo_client[database_name][collection_name].insert_many(json_records)
+        else:
+            logging.info("No existing data found, inserting new data")
+            df = pd.read_csv(file_path)
+            logging.info(f"Rows and columns shape: {df.shape}")
+            # drop index column
+            df.reset_index(drop=True, inplace=True)
+            # convert to json
+            json_records = list(json.loads(df.T.to_json()).values())
+            # dump records in mongodb
+            mongo_client[database_name][collection_name].insert_many(json_records)
     except Exception as e:
         raise SensorException(e, sys)
     

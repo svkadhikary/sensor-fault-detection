@@ -13,7 +13,7 @@ class TrainingPipelineConfig:
     def __init__(self) -> None:
         try:
             timestamp = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
-            self.artifact_dir = os.path.join('artifact', timestamp)
+            self.artifact_dir = os.path.join('datadir', 'artifact', timestamp)
         except Exception as e:
             raise SensorException(e, sys)
 
@@ -81,18 +81,19 @@ class ModelEvaluationConfig:
 class ModelPusherConfig:
     def __init__(self, training_pipeline_config:TrainingPipelineConfig) -> None:
         self.model_pusher_dir = os.path.join(training_pipeline_config.artifact_dir , "model_pusher")
-        self.saved_model_dir = os.path.join("saved_models")
-        self.pusher_model_dir = os.path.join(self.model_pusher_dir,"saved_models")
-        self.pusher_model_path = os.path.join(self.pusher_model_dir,MODEL_FILE_NAME)
-        self.pusher_transformer_path = os.path.join(self.pusher_model_dir,TRANSFORMER_OBJECT_FILE_NAME)
-        self.pusher_target_encoder_path = os.path.join(self.pusher_model_dir,TARGET_ENCODER_OBJECT_FILE_NAME)
+        self.saved_model_dir = os.path.join("datadir", "saved_models")
+        self.pusher_model_dir = os.path.join(self.model_pusher_dir, "saved_models")
+        self.pusher_model_path = os.path.join(self.pusher_model_dir, MODEL_FILE_NAME)
+        self.pusher_transformer_path = os.path.join(self.pusher_model_dir, TRANSFORMER_OBJECT_FILE_NAME)
+        self.pusher_target_encoder_path = os.path.join(self.pusher_model_dir, TARGET_ENCODER_OBJECT_FILE_NAME)
 
 class BatchPredictionConfig:
     def __init__(self):
         try:
-            self.inbox_dir = os.path.join("data","inbox")
-            self.outbox_dir = os.path.join("data","outbox")
-            self.archive_dir = os.path.join("data","archive")
+            self.inbox_dir = os.path.join("datadir", "data", "inbox")
+            self.outbox_dir = os.path.join("datadir", "data", "outbox")
+            self.archive_dir = os.path.join("datadir", "data", "archive")
+            os.makedirs(self.inbox_dir, exist_ok=True)
             os.makedirs(self.outbox_dir ,exist_ok=True)
             os.makedirs(self.archive_dir,exist_ok=True)
         except Exception as e:

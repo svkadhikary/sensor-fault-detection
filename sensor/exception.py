@@ -1,5 +1,5 @@
 import sys
-import os
+from sensor.logger import logging
 
 class SensorException(Exception):
 
@@ -14,6 +14,7 @@ class SensorException(Exception):
         file_name = exc_tb.tb_frame.f_code.co_filename
         line_no = exc_tb.tb_lineno
         error_message = f"Error occured in script name [{file_name}] on line no. [{line_no}], error message: [{error_message}]"
+        logging.info(error_message)
 
         return error_message
     

@@ -26,7 +26,7 @@ class SensorBatchPrediction:
 
             if len(input_files)==0:
                 logging.info(f"No file found hence closing the batch prediction")
-                return None 
+                raise Exception("No file found hence closing the batch prediction")
 
             model_resolver = ModelResolver()
 

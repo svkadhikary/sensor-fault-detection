@@ -5,7 +5,7 @@ import os
 
 LOG_FILE_NAME = f"{datetime.now().strftime('%m%d%Y__%H%M%S')}.log"
 
-LOG_DIR = "logs"
+LOG_DIR = "datadir/logs"
 
 os.makedirs(LOG_DIR, exist_ok=True)
 

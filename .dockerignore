@@ -8,3 +8,5 @@ saved_models/
 venv/
 .env
 aps_failure_training_set1.csv
+Documents/
+datadir/

@@ -7,6 +7,8 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+datadir/
+Documents/
 data/
 saved_models/
 artifact/
@@ -146,6 +148,9 @@ venv.bak/
 
 # mkdocs documentation
 /site
+
+# dataset files
+.aps_failure_training_set1.csv
 
 # mypy
 .mypy_cache/
