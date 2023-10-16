@@ -22,9 +22,6 @@ jobs:
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-  deploy:
-    steps:
-      - checkout
       - run:
           name: Deploy to AWS EC2
           command: |
