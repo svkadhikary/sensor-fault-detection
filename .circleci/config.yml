@@ -24,8 +24,8 @@ jobs:
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   deploy:
     steps:
-      -checkout
-      -run:
+      - checkout
+      - run:
           name: Deploy to AWS EC2
           command: |
             # 1- Install AWS CLI
