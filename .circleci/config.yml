@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build-and-push:
+  build-push-and-deploy:
     docker:
       - image: circleci/python:3.8
     steps:
@@ -58,6 +58,5 @@ jobs:
 workflows:
   build_test_deploy:
     jobs:
-      - build-and-push
-      - deploy
+      - build-push-and-deploy
 
