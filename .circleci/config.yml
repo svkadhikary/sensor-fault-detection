@@ -30,7 +30,7 @@ jobs:
       - run:
           name: SSH into EC2 instance
           command: |
-            ssh -i ~/.ssh/aws-ec2-key.pem ubuntu@ec2-13-235-86-127.ap-south-1.compute.amazonaws.com \
+            ssh -i ~/.ssh/aws-ec2-key.pem ubuntu@ec2-3-110-155-142.ap-south-1.compute.amazonaws.com \
               "mkdir sensor_data" \
               && "docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG" \
               && "docker run -it -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
