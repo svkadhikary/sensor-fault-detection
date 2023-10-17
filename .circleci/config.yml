@@ -34,6 +34,7 @@ jobs:
             mkdir sensor_data
             docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG
             docker run -it -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG
+            EOF
 
 
       # - run:
