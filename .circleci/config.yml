@@ -22,9 +22,9 @@ jobs:
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-      - add_ssh_keys:
-          fingerprints:
-            - dd:bf:de:e1:55:18:ab:be:56:c2:5e:a0:a3:d9:08:df:55:d2:80:a3
+      - run:
+          name: write known hosts file
+          command: echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
       - run:
           name: Configure SSH Key
           command: |
@@ -33,7 +33,7 @@ jobs:
       - run:
           name: SSH into EC2 instance
           command: |
-            ssh -i ~/.ssh/aws-ec2-key.pem ubuntu@ec2-13-126-57-218.ap-south-1.compute.amazonaws.com \
+            ssh -i ~/.ssh/aws-ec2-key.pem ubuntu@ec2-52-66-236-62.ap-south-1.compute.amazonaws.com \
               "mkdir sensor_data" \
               && "docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG" \
               && "docker run -it -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
