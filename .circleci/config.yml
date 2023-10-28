@@ -39,8 +39,8 @@ jobs:
             sleep 5
             ssh ubuntu@ec2-52-66-236-62.ap-south-1.compute.amazonaws.com \
               "mkdir -p sensor_data" \
-              && "docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG" \
-              && "docker run -it -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
+              && "sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG" \
+              && "sudo docker run -it -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
 
 
       # - run:
