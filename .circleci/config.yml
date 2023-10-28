@@ -36,6 +36,7 @@ jobs:
       - run:
           name: SSH into EC2 instance
           command: |
+            sleep 5
             ssh ubuntu@ec2-52-66-236-62.ap-south-1.compute.amazonaws.com \
               "mkdir sensor_data" \
               && "docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG" \
