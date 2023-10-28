@@ -25,9 +25,9 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "dd:bf:de:e1:55:18:ab:be:56:c2:5e:a0:a3:d9:08:df:55:d2:80:a3"
-      # - run:
-      #     name: write known hosts file
-      #     command: echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - run:
+          name: write known hosts file
+          command: echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
       # - run:
       #     name: Configure SSH Key
       #     command: |
