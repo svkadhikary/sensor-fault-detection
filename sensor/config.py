@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
-import pymongo
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
 MONGO_DB_URL_ENV_KEY = "MONGO_DB_URL"
 
@@ -11,5 +12,5 @@ class EnvironmentVariable:
 
 env_var = EnvironmentVariable()
 
-mongo_client = pymongo.MongoClient(env_var.mongo_db_url)
+mongo_client = MongoClient(env_var.mongo_db_url, server_api=ServerApi('1'))
 
