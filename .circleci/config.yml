@@ -1,4 +1,4 @@
-version: 2.1
+version: '2.1'
 orbs:
   aws-cli: circleci/aws-cli@4.0
   aws-ecs: circleci/aws-ecs@4.0
@@ -28,7 +28,8 @@ jobs:
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   deploy-service-update-ecs:
-    executor: aws-ecs/default
+    docker:
+      - image: circleci/python:3.8
     steps:
       - checkout
       - aws-ecs/deploy_service_update:
