@@ -28,9 +28,8 @@ jobs:
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   deploy-service-update-ecs:
-    docker:
-      - image: circleci/python:3.8
     steps:
+      - checkout
       - aws-ecs/deploy_service_update:
           auth:
             - aws-cli/setup:
