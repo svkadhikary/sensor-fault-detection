@@ -30,7 +30,7 @@ jobs:
   deploy-service-update-ecs:
     steps:
       - checkout
-      - aws-ecs/deploy-service-update:
+      - aws-ecs/deploy_service_update:
           auth:
             - aws-cli/setup:
                 aws_access_key_id: $AWS_ACCESS_KEY_ID
