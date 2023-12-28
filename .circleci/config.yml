@@ -1,41 +1,46 @@
 version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@4.0
-  aws-ecs: circleci/aws-ecs@4.0.0
-workflows:
-  jobs:
+  aws-ecs: circleci/aws-ecs@4.0
+jobs:
+  build-and-push:
     docker:
       - image: circleci/python:3.8
-    - checkout
-    - run:
-        name: Setup VirtualEnv
-        command: |
-          echo 'export TAG=1.0.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
-          echo 'export IMAGE_NAME=circleci_sensor_fault' >> $BASH_ENV
-          echo 'export MY_APP_PREFIX=sensor_container' >> $BASH_ENV
-          echo 'export AWS_REGION=ap-south-1' >> $BASH_ENV
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install --upgrade pip
-          pip install --no-cache-dir -r requirements.txt
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run:
-        name: Build and push Docker image
-        command: |
-          docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
-          docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-    - aws-ecs/deploy_service_update:
-        auth:
-          - aws-cli/setup:
-              aws_access_key_id: $AWS_ACCESS_KEY_ID
-              aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-              region: $AWS_REGION
-        cluster: ${MY_APP_PREFIX}-cluster
-        container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
-        family: ${MY_APP_PREFIX}-service
-        service-name: ${MY_APP_PREFIX}-service
+    steps:
+      - checkout
+      - run:
+          name: Setup VirtualEnv
+          command: |
+            echo 'export TAG=1.0.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            echo 'export IMAGE_NAME=circleci_sensor_fault' >> $BASH_ENV
+            echo 'export MY_APP_PREFIX=sensor_container' >> $BASH_ENV
+            echo 'export AWS_REGION=ap-south-1' >> $BASH_ENV
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip
+            pip install --no-cache-dir -r requirements.txt
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build and push Docker image
+          command: |
+            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+            docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
+  deploy-service-update-ecs:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - aws-ecs/deploy_service_update:
+          auth:
+            - aws-cli/setup:
+                aws_access_key_id: $AWS_ACCESS_KEY_ID
+                aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+                region: $AWS_REGION
+          cluster: ${MY_APP_PREFIX}-cluster
+          container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
+          family: ${MY_APP_PREFIX}-service
+          service-name: ${MY_APP_PREFIX}-service
       # - add_ssh_keys:
       #     fingerprints:
       #       - "dd:bf:de:e1:55:18:ab:be:56:c2:5e:a0:a3:d9:08:df:55:d2:80:a3"
@@ -55,9 +60,9 @@ workflows:
       #       ssh ubuntu@$EC2_LINK \
       #         "sudo docker run -d --name $CONTAINER_NAME -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
 
-# workflows:
-#   build_test_deploy:
-#     jobs:
-#       - build-and-push
-#       - deploy-service-update-ecs
+workflows:
+  build_test_deploy:
+    jobs:
+      - build-and-push
+      - deploy-service-update-ecs
 
