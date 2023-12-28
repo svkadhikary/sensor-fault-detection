@@ -64,5 +64,7 @@ workflows:
   build_test_deploy:
     jobs:
       - build-and-push
-      - deploy-service-update-ecs
+      - deploy-service-update-ecs:
+          requires:
+            - build-and-push
 
