@@ -64,14 +64,14 @@ workflows:
   build_and_deploy:
     jobs:
       - build-and-push
-      - aws-ecs/deploy-service-update: # orb built-in job
+      - aws-ecs/deploy_service_update: # orb built-in job
           requires:
             - build-and-push
           auth:
             - aws-cli/setup:
-                aws-access-key_id: $AWS_ACCESS_KEY_ID
-                aws-secret-access_key: $AWS_SECRET_ACCESS_KEY
-                aws-region: $AWS_REGION
+                aws_access_key_id: $AWS_ACCESS_KEY_ID
+                aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+                aws_region: $AWS_REGION
           cluster: ${MY_APP_PREFIX}-cluster
-          container-image-name-updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
+          container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
