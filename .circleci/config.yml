@@ -69,9 +69,9 @@ workflows:
             - build-and-push
           auth:
             - aws-cli/setup:
-                aws_access_key_id: $AWS_ACCESS_KEY_ID
-                aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-                region: $AWS_REGION
+                aws-access-key_id: $AWS_ACCESS_KEY_ID
+                aws-secret-access_key: $AWS_SECRET_ACCESS_KEY
+                aws-region: $AWS_REGION
           cluster: ${MY_APP_PREFIX}-cluster
           container-image-name-updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
