@@ -59,11 +59,4 @@ jobs:
       #       ssh ubuntu@$EC2_LINK "sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
       #       ssh ubuntu@$EC2_LINK \
       #         "sudo docker run -d --name $CONTAINER_NAME -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
-
-workflows:
-  build_test_deploy:
-    jobs:
-      - build-and-push
-      - deploy-service-update-ecs:
-          requires:
-            - build-and-push
+      
