@@ -71,7 +71,7 @@ workflows:
             - aws-cli/setup:
                 aws_access_key_id: AWS_ACCESS_KEY_ID
                 aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-                aws_region: $AWS_REGION
+                region: ${AWS_REGION}
           cluster: ${MY_APP_PREFIX}-cluster
           container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
