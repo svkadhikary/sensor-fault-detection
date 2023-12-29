@@ -1,7 +1,7 @@
-version: '2.1'
+version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@4.0
-  aws-ecs: circleci/aws-ecs@4.0.0
+  aws-ecs: circleci/aws-ecs@3.2.0
+  aws-cli: circleci/aws-cli@3.1.1
 jobs:
   build-and-push:
     docker:
@@ -59,4 +59,11 @@ jobs:
       #       ssh ubuntu@$EC2_LINK "sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
       #       ssh ubuntu@$EC2_LINK \
       #         "sudo docker run -d --name $CONTAINER_NAME -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
-      
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - build-and-push
+      - deploy-service-update-ecs:
+          requires:
+            - build-and-push
