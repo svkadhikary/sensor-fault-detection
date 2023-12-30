@@ -41,38 +41,6 @@ jobs:
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-  # deploy-service-update-ecs:
-  #   executor: aws-ecs/default
-  #   steps:
-  #     - checkout
-  #     - aws-ecs/deploy-service-update:
-  #         auth:
-  #           - aws-cli/setup:
-  #               aws_access_key_id: $AWS_ACCESS_KEY_ID
-  #               aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-  #               region: $AWS_REGION
-  #         cluster: ${MY_APP_PREFIX}-cluster
-  #         container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
-  #         family: ${MY_APP_PREFIX}-service
-  #         service-name: ${MY_APP_PREFIX}-service
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "dd:bf:de:e1:55:18:ab:be:56:c2:5e:a0:a3:d9:08:df:55:d2:80:a3"
-      # - run:
-      #     name: write known hosts file
-      #     command: echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-      # - run:
-      #     name: Configure SSH Key
-      #     command: |
-      #       echo "$AWS_EC2_SSH_KEY" > ~/.ssh/aws-ec2-key.pem
-      #       chmod 400 ~/.ssh/aws-ec2-key.pem
-      # - run:
-      #     name: SSH into EC2 instance
-      #     command: |
-      #       ssh ubuntu@$EC2_LINK "mkdir -p sensor_data"
-      #       ssh ubuntu@$EC2_LINK "sudo docker pull $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
-      #       ssh ubuntu@$EC2_LINK \
-      #         "sudo docker run -d --name $CONTAINER_NAME -v /home/ubuntu/sensor_data/:/app/datadir/ -p 8501:8501 $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
 
 workflows:
   build_and_deploy:
@@ -81,11 +49,6 @@ workflows:
       - aws-ecs/deploy_service_update: # orb built-in job
           requires:
             - build-and-push
-          auth:
-            - aws-cli/setup:
-                aws_access_key_id: AWS_ACCESS_KEY_ID
-                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-                region: ${AWS_REGION}
           cluster: ${MY_APP_PREFIX}-cluster
           container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
