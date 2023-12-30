@@ -89,4 +89,4 @@ workflows:
           cluster: ${MY_APP_PREFIX}-cluster
           container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
-          task_definition_arn: '${TASK_DEFINITION_ARN}'
+          task_definition_arn: ${TASK_DEFINITION_ARN}
