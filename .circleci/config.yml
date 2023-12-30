@@ -21,6 +21,20 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
       - setup_remote_docker:
           docker_layer_caching: true
+      - aws-cli/install
+      - aws-cli/setup:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          region: ${AWS_REGION}
+      - run:
+          name: Get task definition arn
+          command: command: >
+            TASK_DEFINITION_ARN=$(aws ecs describe-task-definition \
+                --task-definition ${MY_APP_PREFIX}-service \
+                --output text \
+                --query 'taskDefinition.taskDefinitionArn')
+            echo "export TASK_DEFINITION_ARN='${TASK_DEFINITION_ARN}'" >>
+            "$BASH_ENV"
       - run:
           name: Build and push Docker image
           command: |
