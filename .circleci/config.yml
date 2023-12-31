@@ -15,6 +15,7 @@ jobs:
             echo 'export IMAGE_NAME=circleci_sensor_fault' >> $BASH_ENV
             echo 'export MY_APP_PREFIX=sensor_container' >> $BASH_ENV
             echo 'export AWS_REGION=ap-south-1' >> $BASH_ENV
+            echo 'export ECS_TASK_DEFINITION_NAME=${MY_APP_PREFIX}-service' >> $BASH_ENV
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip
@@ -49,7 +50,12 @@ workflows:
       - aws-ecs/deploy_service_update: # orb built-in job
           requires:
             - build-and-push
+          auth:
+            - aws-cli/setup:
+                aws_access_key_id: AWS_ACCESS_KEY_ID
+                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+                region: ${AWS_REGION}
           cluster: ${MY_APP_PREFIX}-cluster
           container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
-          task_definition_arn: ${TASK_DEFINITION_ARN}
+          
