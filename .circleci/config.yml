@@ -15,7 +15,6 @@ jobs:
             echo 'export IMAGE_NAME=circleci_sensor_fault' >> $BASH_ENV
             echo 'export MY_APP_PREFIX=sensor_container' >> $BASH_ENV
             echo 'export AWS_REGION=ap-south-1' >> $BASH_ENV
-            echo 'export ECS_TASK_DEFINITION_NAME=${MY_APP_PREFIX}-service' >> $BASH_ENV
             python3 -m venv venv
             . venv/bin/activate
             pip install --upgrade pip
