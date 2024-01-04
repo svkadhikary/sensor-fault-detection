@@ -27,15 +27,17 @@ jobs:
             docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
             docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-  update-tag:
+  update-service:
     docker:
       - image: cimg/python:3.10
     steps:
+      - checkout
+      - aws-cli /install
       - aws-cli/setup:
           aws_access_key_id: AWS_ACCESS_KEY_ID
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
           region: ${AWS_REGION}
-      - aws-ecs/update_service: # orb built-in job
+      - aws-ecs/deploy-service-update: # orb built-in job
           # auth:
           #   - aws-cli/setup:
           #       aws_access_key_id: AWS_ACCESS_KEY_ID
