@@ -37,7 +37,7 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_DEFAULT_REGION
-      - aws-ecs/deploy-service-update: # orb built-in job
+      - aws-ecs/update-service: # orb built-in job
           # auth:
           #   - aws-cli/setup:
           #       aws_access_key_id: AWS_ACCESS_KEY_ID
@@ -46,7 +46,7 @@ jobs:
           cluster: ${MY_APP_PREFIX}-cluster
           container_image_name_updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
           family: ${MY_APP_PREFIX}-service
-          
+
 workflows:
   build_and_deploy:
     jobs:
