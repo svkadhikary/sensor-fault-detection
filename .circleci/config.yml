@@ -42,8 +42,8 @@ jobs:
       - run:
           name: Update task definition
           command: |
-            echo "aws ecs describe-task-definition --task-definition $MY_APP_PREFIX-service"
-            aws ecs describe-task-definition --task-definition "$MY_APP_PREFIX-service" > current-task-definition.json
+            echo "aws ecs describe-task-definition --task-definition sensor_container-service"
+            aws ecs describe-task-definition --task-definition "sensor_container-service" > current-task-definition.json
             OLD_TAG = $(jq -r '.taskDefinition.containerDefinitions[].image | split(":") | .[-1]' current-task-definition.json)
             jq --arg new_tag ${TAG} '.taskDefinition.containerDefinitions[].image |= sub(":$old_tag$", ":\($new_tag)")' --arg old_tag "$OLD_TAG" current-task-definition.json > updated-task-definition.json
             aws ecs register-task-definition --cli-input-json updated-task-definition.json
