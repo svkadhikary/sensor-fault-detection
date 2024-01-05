@@ -21,15 +21,15 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: Build and push Docker image
-          command: |
-            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
-            docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
+      # - run:
+      #     name: Build and push Docker image
+      #     command: |
+      #       docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
+      #       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+      #       docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   update-service:
     docker:
-      - image: cimg/python:3.8
+      - image: circleci/aws-cli
     steps:
       - checkout
       - run:
