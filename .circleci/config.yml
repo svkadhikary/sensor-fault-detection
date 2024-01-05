@@ -21,37 +21,41 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
       - setup_remote_docker:
           docker_layer_caching: true
+      - run:
+          name: Build and push Docker image
+          command: |
+            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+            docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
+  # configure-aws:
+  #   docker:
+  #     - image: circleci/python:3.8
+  #   steps:
+  #     - checkout
+  #     - aws-cli/install
+  #     - run:
+  #         name: Configure AWS credentials
+  #         command: |
+  #           aws configure set aws_access_key_id AWS_ACCESS_KEY_ID
+  #           aws configure set aws_secret_access_key AWS_SECRET_ACCESS_KEY
+  #           aws configure set default.region AWS_DEFAULT_REGION
       # - run:
-      #     name: Build and push Docker image
+      #     name: Update task definition
       #     command: |
-      #       docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
-      #       docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
-      #       docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
-  update-service:
-    docker:
-      - image: circleci/python:3.8
-    steps:
-      - checkout
-      - aws-cli/install
-      - run:
-          name: Configure AWS credentials
-          command: |
-            aws configure set aws_access_key_id AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key AWS_SECRET_ACCESS_KEY
-            aws configure set default.region AWS_DEFAULT_REGION
-      - run:
-          name: Update task definition
-          command: |
-            echo "aws ecs describe-task-definition --task-definition sensor_container-service"
-            aws ecs describe-task-definition --task-definition "sensor_container-service" > current-task-definition.json
-            OLD_TAG = $(jq -r '.taskDefinition.containerDefinitions[].image | split(":") | .[-1]' current-task-definition.json)
-            jq --arg new_tag ${TAG} '.taskDefinition.containerDefinitions[].image |= sub(":$old_tag$", ":\($new_tag)")' --arg old_tag "$OLD_TAG" current-task-definition.json > updated-task-definition.json
-            aws ecs register-task-definition --cli-input-json updated-task-definition.json
+      #       echo "aws ecs describe-task-definition --task-definition sensor_container-service"
+      #       aws ecs describe-task-definition --task-definition "sensor_container-service" > current-task-definition.json
+      #       OLD_TAG = $(jq -r '.taskDefinition.containerDefinitions[].image | split(":") | .[-1]' current-task-definition.json)
+      #       jq --arg new_tag ${TAG} '.taskDefinition.containerDefinitions[].image |= sub(":$old_tag$", ":\($new_tag)")' --arg old_tag "$OLD_TAG" current-task-definition.json > updated-task-definition.json
+      #       aws ecs register-task-definition --cli-input-json updated-task-definition.json
 workflows:
   build_and_deploy:
     jobs:
       - build-and-push
-      - update-service:
+      - aws-ecs/deploy-service-update:
           requires:
             - build-and-push
+          aws-region: AWS_DEFAULT_REGION
+          family: 'sensor_container-service'
+          cluster: 'sensor_container-cluster'
+          container-image-name-updates: 'container=sensor_app,image=$DOCKER_USERNAME/$IMAGE_NAME,tag=$TAG'
           
