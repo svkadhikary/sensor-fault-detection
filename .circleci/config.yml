@@ -29,9 +29,10 @@ jobs:
       #       docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   update-service:
     docker:
-      - image: circleci/aws-cli
+      - image: circleci/python:3.8
     steps:
       - checkout
+      - aws-cli/install
       - run:
           name: Configure AWS credentials
           command: |
