@@ -32,21 +32,19 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - checkout
-      - aws-cli/install
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          aws-region: AWS_DEFAULT_REGION
-      - aws-ecs/update-service: # orb built-in job
-          # auth:
-          #   - aws-cli/setup:
-          #       aws_access_key_id: AWS_ACCESS_KEY_ID
-          #       aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-          #       region: ${AWS_REGION}
-          cluster: ${MY_APP_PREFIX}-cluster
-          container-image-name-updates: container=${DOCKER_USERNAME}/${IMAGE_NAME},tag=${TAG}
-          family: ${MY_APP_PREFIX}-service
-
+      - run:
+          name: Configure AWS credentials
+          command: |
+            aws configure set aws_access_key_id AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key AWS_SECRET_ACCESS_KEY
+            aws configure set default.region AWS_DEFAULT_REGION
+      - run:
+          name: Update task definition
+          command: |
+            aws ecs describe-task-definition --task-definition ${MY_APP_PREFIX}-service > current-task-definition.json
+            OLD_TAG = $(jq -r '.taskDefinition.containerDefinitions[].image | split(":") | .[-1]' current-task-definition.json)
+            jq --arg new_tag ${TAG} '.taskDefinition.containerDefinitions[].image |= sub(":$old_tag$", ":\($new_tag)")' --arg old_tag "$OLD_TAG" current-task-definition.json > updated-task-definition.json
+            aws ecs register-task-definition --cli-input-json updated-task-definition.json
 workflows:
   build_and_deploy:
     jobs:
