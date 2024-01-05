@@ -29,7 +29,7 @@ jobs:
       #       docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
   update-service:
     docker:
-      - image: circleci/python3.8
+      - image: circleci/aws-cli
     steps:
       - checkout
       - run:
