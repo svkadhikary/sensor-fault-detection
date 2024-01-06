@@ -57,5 +57,5 @@ workflows:
           aws-region: AWS_DEFAULT_REGION
           family: 'sensor_container-service'
           cluster: 'sensor_container-cluster'
-          container-image-name-updates: 'container=sensor_app,image=$DOCKER_USERNAME/$IMAGE_NAME,tag=$TAG'
+          container-image-name-updates: 'container=sensor_app, tag=$TAG'
           
