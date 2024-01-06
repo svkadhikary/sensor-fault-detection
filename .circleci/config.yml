@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Setup VirtualEnv
           command: |
-            echo 'export TAG=1.0.${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            echo 'export TAG=${CIRCLE_SHA1}' >> $BASH_ENV
             echo 'export IMAGE_NAME=circleci_sensor_fault' >> $BASH_ENV
             echo 'export MY_APP_PREFIX=sensor_container' >> $BASH_ENV
             echo 'export AWS_REGION=ap-south-1' >> $BASH_ENV
@@ -24,9 +24,9 @@ jobs:
       - run:
           name: Build and push Docker image
           command: |
-            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
+            docker build -t $DOCKER_USERNAME/$IMAGE_NAME:${CIRCLE_SHA1} .
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
-            docker push $DOCKER_USERNAME/$IMAGE_NAME:$TAG
+            docker push $DOCKER_USERNAME/$IMAGE_NAME:${CIRCLE_SHA1}
   # configure-aws:
   #   docker:
   #     - image: circleci/python:3.8
@@ -57,5 +57,5 @@ workflows:
           aws-region: AWS_DEFAULT_REGION
           family: 'sensor_container-service'
           cluster: 'sensor_container-cluster'
-          container-image-name-updates: 'container=sensor_app, tag=TAG'
+          container-image-name-updates: 'container=sensor_app, tag=${CIRCLE_SHA1}'
           
