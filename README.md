@@ -25,7 +25,9 @@ The project is an end-to-end machine learning application designed to explore th
 2. Install dependencies: `pip install -r requirements.txt`.
 3. Export "MONGO_DB_URL:(your-mongo-db-database-connection-url)" variable as an environment variable.
 4. Run with 'python app.py'.
+
 OR
+
 1. Clone the repository.
 2. add the line ENV MONGO_DB_URL="(your-mongo-db-database-connection-url)" in Dockerfile
 3. build a docker image and run.
