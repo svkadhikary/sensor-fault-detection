@@ -4,6 +4,10 @@
 
 The project is an end-to-end machine learning application designed to explore the Scania trucks dataset, comprising of sensor data from the trucks, select the best model, and deploy and build a CI/CD pipeline with it.
 
+## Dataset Description
+
+The system in focus is the Air Pressure System (APS) which generates pressurized air that are utilized in various fuctions like braking, gear change etc. The dataset's positive class corresponds to component failures for a specific component of the APS system. The negative class corrsponds to the vehicles with failures for component not related to the APS system.
+
 ## Features
 
 - **Dataset Analysis:** Comprehensive exploration of datasets to gain insights.
@@ -47,11 +51,56 @@ The web interface has the functionality
 
 ### Platform
 
-- The model is deployed on AWS ECS with CircleCI as an AIOps agent.
+- The model is deployed on AWS ECS with CircleCI as an MLOps agent.
 
 ### Deployment Process
 
-- (Briefly explain the deployment steps and any configurations)
+- Build and push docker image manually at first
+- Create role in AWS IAM user with AmazonECS_FullAccess policy enabled
+    - Create Access Key for Command Line Interface access and download the access_key_id and security_access_key
+- Create EFS volume for persistant storage
+- Go Elastic Container Service
+- Create cluster with cluster_name and select infrastructure AWS Fargate
+- Create task definition
+    - Write container_name, task_definition_family
+    - Operating system: Linux X86_64
+    - select CPU, RAM capacities
+    - container port: 8501 (streamlit works on port 8501)
+    - Image name is docker image_name:tag
+    - Select Task role and Task execution role as ecsTaskExecutionRole
+    - add environment variable like MongoDB URL
+    - Add volume of type: EFS (for persistant storage)
+    - Enter volume name, file system ID, root directory and access point ID as per EFS volume
+    - Add mountpoint with container_name and path as /app/datadir
+    - Create
+- After creation directly click Deploy or go to previously created cluster and create service
+    - Compute option: Capaity Provider Strategy
+    - Family: task_definition_family; Revision: LATEST
+    - Write a service_name
+    - In network dropdown: create security group:- Type: All Traffic; Souce: Anywhere
+    - Public IP turned on
+    - Create
+This will create the service and deploy the dockerized application.
+Note down the Public IP from cluster_name --> Tasks --> click on the listed task.
+
+## CI/CD
+- After deploying the following strings are from the previous step
+    - access_key_id
+    - security_access_key
+    - aws_region (The region where the container is deployed)
+    - container_name
+    - task_definition_family
+    - image_name:tag
+    - cluster_name
+- Use this in circleci/config.yml file with the help of circleci_aws-ecs and circleci_aws-cli orbs
+- Open CircleCI account, set up project from github, follow project
+- The config file inside the .circleci/config.yml 
+    - first sets up a virtual environment
+    - builds and pushes new docker image to dockerhub
+    - uses aws-cli to access aws using credetials
+    - uses aws-ecs to deploy service update
+
+- Setting this up triggers CircleCI whenever it notices an update in the project code in github, and automatically updates and deploys the ECS service with new image name updates.
 
 ## Future Improvements
 
