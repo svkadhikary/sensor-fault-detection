@@ -71,7 +71,7 @@ The web interface has the functionality
     - add environment variable like MongoDB URL
     - Add volume of type: EFS (for persistant storage)
     - Enter volume name, file system ID, root directory and access point ID as per EFS volume
-    - Add mountpoint with container_name and path as /app/datadir
+    - Add mountpoint with container_name and path as /app/
     - Create
 - After creation directly click Deploy or go to previously created cluster and create service
     - Compute option: Capaity Provider Strategy

@@ -16,6 +16,7 @@ def list_files_and_folders(directory):
             st.header(f"{selection}")
             if selection_path.endswith((".log", ".csv", ".yaml")):
                 file_contents = open(os.path.join(directory, selection_path), "r").readlines()
+                st.download_button(f"Download {selection}", data=open(selection_path, "rb"), file_name=f"{selection}")
                 st.write(file_contents)
             else:
                 st.write(selection_path)

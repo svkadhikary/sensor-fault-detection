@@ -12,5 +12,5 @@ class EnvironmentVariable:
 
 env_var = EnvironmentVariable()
 
-mongo_client = MongoClient(env_var.mongo_db_url, server_api=ServerApi('1'))
+mongo_client = MongoClient(env_var.mongo_db_url, connectTimeoutMS=None, server_api=ServerApi('1'))
 
