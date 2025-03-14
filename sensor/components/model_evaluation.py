@@ -73,14 +73,14 @@ class ModelEvaluation:
             y_pred = current_model.predict(input_arr)
             logging.info(f"Prediction using Current model: {current_target_encoder.inverse_transform(y_pred[:5])}")
             current_model_score = f1_score(y_true, y_pred)
-            logging.info(f"Accuracy score using current model: {prev_model_score}")
+            logging.info(f"Accuracy score using current model: {current_model_score}")
 
             # check the accuracy difference
             diff = current_model_score - prev_model_score
             if diff < self.model_eval_config.change_threshold:
                 logging.info("Currently trained model is not better than the previous model")
                 raise Exception("Current trained model is not better than the previous model")
-            
+
             # model evaluation artifact
             model_eval_artifact = ModelEvaluationArtifact(
                 improved_model_accuracy=diff,
